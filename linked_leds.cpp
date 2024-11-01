@@ -19,11 +19,11 @@ static volatile uint64_t DOUBLE_PRESS_TIME;
 
 static const uint64_t COLOUR_CHANGE_TIME = 1000;
 
+Timer timer;  // Timer to replace Kernel::get_ms_count()
+
 static uint64_t get_time()
 {
-    auto now = Kernel::Clock::now();
-    auto duration = now.time_since_epoch();
-    return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    return timer.read_ms();
 }
 
 class ButtonState
@@ -261,6 +261,8 @@ void update_time()
 
 int main(int argc, char** argv)
 {
+    timer.start();  // Start the timer
+
     BUTTON_INTERRUPT.fall(update_time);
     auto event_manager = std::make_unique<EventManager>();
     auto state_controller = std::make_unique<StateController>();
@@ -289,7 +291,7 @@ int main(int argc, char** argv)
         }
         uint64_t now = get_time();
         state_controller->step();
-        ThisThread::sleep_for(10ms);
+        ThisThread::sleep_for(10);
     }
 
     return EXIT_SUCCESS;
