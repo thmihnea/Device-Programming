@@ -257,7 +257,7 @@ void update_time()
     BUTTON_PRESS_TIME = current_time;
 }
 
-int main()
+int main(int argc, char** argv)
 {
     BUTTON_INTERRUPT.fall(update_time);
     auto event_manager = std::make_unique<EventManager>();
