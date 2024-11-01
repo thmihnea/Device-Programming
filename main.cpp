@@ -163,9 +163,10 @@ public:
     {
         if (this->data.empty())
         {
-            this->head = nullptr;
             return;
         }
+
+        this->head = nullptr;
 
         auto temp_head = std::make_shared<Node>(0);
         auto current = temp_head;
@@ -186,6 +187,7 @@ public:
         }
 
         this->head = temp_head;
+        this->data.clear();
     }
 
     int get_data()
@@ -219,7 +221,7 @@ public:
 
     void step()
     {
-        LinkedSequence* sequence = this->edited ? this->current.get() : this->waiting.get();
+        LinkedSequence* sequence = this->editing ? this->waiting.get() : (this->edited ? this->current.get() : this->waiting.get());
         uint64_t now = get_time();
         if (now - this->last_change > COLOUR_CHANGE_TIME)
         {
